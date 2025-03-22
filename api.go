@@ -63,11 +63,26 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 }
 
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	// Pegando o id nos parâmetros da URL
+	id := mux.Vars(r)["id"]
+
+	fmt.Println(id)
+
+	return WriteJSON(w, http.StatusOK, &Account{})
 }
 
 func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	createAccountRequest := new(CreateAccountRequest)
+	if err := json.NewDecoder(r.Body).Decode(createAccountRequest); err != nil {
+		return err
+	}
+
+	account := NewAccount(createAccountRequest.FirstName, createAccountRequest.LastName)
+	if err := s.store.CreateAccount(account); err != nil {
+		return err
+	}
+
+	return WriteJSON(w, http.StatusCreated, account)
 }
 
 func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) error {
@@ -76,4 +91,31 @@ func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) 
 
 func (s *APIServer) handleTransfer(w http.ResponseWriter, r *http.Request) error {
 	return nil
+}
+
+// Função para envio de respostas em formato JSON
+func WriteJSON(w http.ResponseWriter, status int, value any) error {
+	// Configurando o cabeçalho da resposta
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(status)
+	// Enviando a resposta
+	return json.NewEncoder(w).Encode(value)
+}
+
+// Tipo das nossas handle functions
+type apiFunc func(http.ResponseWriter, *http.Request) error
+
+// Definindo a estrutura da nossa API Error
+type APIError struct {
+	Error string
+}
+
+// Convertendo a nossa handle function para um http.HandlerFunc para estar de acordo com o nosso router
+func makeHTTPHandleFunc(f apiFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := f(w, r); err != nil {
+			// Tratar o erro
+			WriteJSON(w, http.StatusBadRequest, APIError{Error: err.Error()})
+		}
+	}
 }
