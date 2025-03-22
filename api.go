@@ -86,7 +86,11 @@ func (s *APIServer) handleGetAccountByID(w http.ResponseWriter, r *http.Request)
 		return WriteJSON(w, http.StatusOK, account)
 	}
 
-	return WriteJSON(w, http.StatusOK, account)
+	if r.Method == http.MethodDelete {
+		return s.handleDeleteAccount(w, r)
+	}
+
+	return fmt.Errorf("Method not allowed %s", r.Method)
 }
 
 func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) error {
