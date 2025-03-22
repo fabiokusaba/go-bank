@@ -31,3 +31,41 @@ func NewPostgresStore() (*PostgresStore, error) {
 		db: db,
 	}, nil
 }
+
+func (s *PostgresStore) Init() error {
+	return s.createAccountTable()
+}
+
+func (s *PostgresStore) createAccountTable() error {
+	query := `create table if not exists accounts(
+    	id serial primary key,
+    	first_name varchar(100) not null,
+    	last_name varchar(100) not null,
+    	number serial,
+    	balance float,
+    	created_at timestamp 	
+	)`
+
+	_, err := s.db.Exec(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *PostgresStore) CreateAccount(a *Account) error {
+	return nil
+}
+
+func (s *PostgresStore) DeleteAccount(id int) error {
+	return nil
+}
+
+func (s *PostgresStore) UpdateAccount(a *Account) error {
+	return nil
+}
+
+func (s *PostgresStore) GetAccountByID(id int) (*Account, error) {
+	return nil, nil
+}
