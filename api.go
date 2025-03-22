@@ -108,7 +108,17 @@ func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	id := mux.Vars(r)["id"]
+	accountID, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
+
+	if err := s.store.DeleteAccount(accountID); err != nil {
+		return err
+	}
+
+	return WriteJSON(w, http.StatusNoContent, nil)
 }
 
 func (s *APIServer) handleTransfer(w http.ResponseWriter, r *http.Request) error {
