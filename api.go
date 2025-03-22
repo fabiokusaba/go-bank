@@ -73,6 +73,10 @@ func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) err
 func (s *APIServer) handleGetAccountByID(w http.ResponseWriter, r *http.Request) error {
 	// Pegando o id nos parâmetros da URL
 	id := mux.Vars(r)["id"]
+	accountID, err := strconv.Atoi(id)
+	if err != nil {
+		return err
+	}
 
 	fmt.Println(id)
 
