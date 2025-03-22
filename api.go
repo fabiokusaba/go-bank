@@ -16,7 +16,7 @@ type APIServer struct {
 }
 
 // Criando uma nova instância de APIServer
-func NewAPIServer(listenAddr string) *APIServer {
+func NewAPIServer(listenAddr string, store Storage) *APIServer {
 	return &APIServer{
 		listenAddr: listenAddr,
 	}
