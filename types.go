@@ -19,6 +19,7 @@ func NewAccount(firstName, lastName string) *Account {
 		FirstName: firstName,
 		LastName:  lastName,
 		Number:    int64(rand.Intn(1000000)),
+		CreatedAt: time.Now().UTC(),
 		// Não precisamos passar o Balance porque o Go automaticamente vai inicializar com 0, valor default para int64
 	}
 }
