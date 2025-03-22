@@ -9,33 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// Função para envio de respostas em formato JSON
-func WriteJSON(w http.ResponseWriter, status int, value any) error {
-	// Configurando o cabeçalho da resposta
-	w.WriteHeader(status)
-	w.Header().Set("Content-Type", "application/json")
-	// Enviando a resposta
-	return json.NewEncoder(w).Encode(value)
-}
-
-// Tipo das nossas handle functions
-type apiFunc func(http.ResponseWriter, *http.Request) error
-
-// Definindo a estrutura da nossa API Error
-type APIError struct {
-	Error string
-}
-
-// Convertendo a nossa handle function para um http.HandlerFunc para estar de acordo com o nosso router
-func makeHTTPHandleFunc(f apiFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if err := f(w, r); err != nil {
-			// Tratar o erro
-			WriteJSON(w, http.StatusBadRequest, APIError{Error: err.Error()})
-		}
-	}
-}
-
 // Estrutura da nossa API Server
 type APIServer struct {
 	listenAddr string
