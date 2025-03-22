@@ -123,7 +123,7 @@ type apiFunc func(http.ResponseWriter, *http.Request) error
 
 // Definindo a estrutura da nossa API Error
 type APIError struct {
-	Error string
+	Error string `json:"error"`
 }
 
 // Convertendo a nossa handle function para um http.HandlerFunc para estar de acordo com o nosso router
