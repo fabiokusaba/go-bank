@@ -55,6 +55,20 @@ func (s *PostgresStore) createAccountTable() error {
 }
 
 func (s *PostgresStore) CreateAccount(a *Account) error {
+	statement, err := s.db.Prepare(`
+		insert into accounts(first_name, last_name, number, balance, created_at)
+		values ($1, $2, $3, $4, $5)
+	`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(a.FirstName, a.LastName, a.Number, a.Balance, a.CreatedAt)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
