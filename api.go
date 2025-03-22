@@ -12,6 +12,7 @@ import (
 // Estrutura da nossa API Server
 type APIServer struct {
 	listenAddr string
+	store      Storage
 }
 
 // Criando uma nova instância de APIServer
