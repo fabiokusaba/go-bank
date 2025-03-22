@@ -1,6 +1,14 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
+
+type CreateAccountRequest struct {
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+}
 
 // Definindo a estrutura de uma conta
 type Account struct {
