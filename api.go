@@ -29,6 +29,7 @@ func NewAPIServer(listenAddr string, store Storage) *APIServer {
 func (s *APIServer) Run() {
 	router := mux.NewRouter()
 
+	router.HandleFunc("/login", makeHTTPHandleFunc(s.handleLogin))
 	router.HandleFunc("/account", makeHTTPHandleFunc(s.handleAccount))
 	router.HandleFunc("/account/{id}", withJWTAuth(makeHTTPHandleFunc(s.handleGetAccountByID), s.store))
 
