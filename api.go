@@ -103,7 +103,15 @@ func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 		return err
 	}
 
-	account := NewAccount(createAccountRequest.FirstName, createAccountRequest.LastName)
+	account, err := NewAccount(
+		createAccountRequest.FirstName,
+		createAccountRequest.LastName,
+		createAccountRequest.Password,
+	)
+	if err != nil {
+		return err
+	}
+
 	if err := s.store.CreateAccount(account); err != nil {
 		return err
 	}
