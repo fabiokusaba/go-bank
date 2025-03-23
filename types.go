@@ -55,3 +55,7 @@ func NewAccount(firstName, lastName, password string) (*Account, error) {
 		// Não precisamos passar o Balance porque o Go automaticamente vai inicializar com 0, valor default para int64
 	}, nil
 }
+
+func (a *Account) ValidatePassword(password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(a.EncryptedPassword), []byte(password))
+}
