@@ -122,7 +122,16 @@ func (s *APIServer) handleDeleteAccount(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *APIServer) handleTransfer(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	transferRequest := new(TransferRequest)
+	if err := json.NewDecoder(r.Body).Decode(transferRequest); err != nil {
+		return err
+	}
+
+	if err := s.store.UpdateAccount(transferRequest); err != nil {
+		return err
+	}
+
+	return WriteJSON(w, http.StatusOK, transferRequest)
 }
 
 // Função para envio de respostas em formato JSON
