@@ -67,7 +67,14 @@ func (s *PostgresStore) CreateAccount(a *Account) error {
 	}
 	defer statement.Close()
 
-	_, err = statement.Exec(a.FirstName, a.LastName, a.Number, a.Balance, a.CreatedAt)
+	_, err = statement.Exec(
+		a.FirstName,
+		a.LastName,
+		a.Number,
+		a.EncryptedPassword,
+		a.Balance,
+		a.CreatedAt,
+	)
 	if err != nil {
 		return err
 	}
