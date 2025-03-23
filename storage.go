@@ -10,6 +10,7 @@ type Storage interface {
 	DeleteAccount(int) error
 	UpdateAccount(*TransferRequest) error
 	GetAccounts() ([]*Account, error)
+	GetAccountByNumber(int) (*Account, error)
 	GetAccountByID(int) (*Account, error)
 }
 
