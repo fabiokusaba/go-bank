@@ -44,6 +44,8 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 		return s.handleGetAccount(w, r)
 	case http.MethodPost:
 		return s.handleCreateAccount(w, r)
+	case http.MethodPut:
+		return s.handleTransfer(w, r)
 	default:
 		return fmt.Errorf("Method not allowed %s", r.Method)
 	}
