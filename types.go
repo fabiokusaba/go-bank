@@ -33,7 +33,12 @@ type Account struct {
 }
 
 // Criando uma nova instância de Account
-func NewAccount(firstName, lastName string) *Account {
+func NewAccount(firstName, lastName, password string) (*Account, error) {
+	encpwd, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Account{
 		FirstName: firstName,
 		LastName:  lastName,
