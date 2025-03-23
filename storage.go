@@ -59,8 +59,8 @@ func (s *PostgresStore) createAccountTable() error {
 
 func (s *PostgresStore) CreateAccount(a *Account) error {
 	statement, err := s.db.Prepare(`
-		insert into accounts(first_name, last_name, number, balance, created_at)
-		values ($1, $2, $3, $4, $5)
+		insert into accounts(first_name, last_name, number, encrypted_password, balance, created_at)
+		values ($1, $2, $3, $4, $5, $6)
 	`)
 	if err != nil {
 		return err
