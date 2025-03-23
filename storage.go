@@ -147,6 +147,7 @@ func (s *PostgresStore) GetAccountByNumber(number int64) (*Account, error) {
 			&account.FirstName,
 			&account.LastName,
 			&account.Number,
+			&account.EncryptedPassword,
 			&account.Balance,
 			&account.CreatedAt); err != nil {
 			return nil, err
