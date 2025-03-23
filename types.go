@@ -22,12 +22,13 @@ type CreateAccountRequest struct {
 
 // Definindo a estrutura de uma conta
 type Account struct {
-	ID        int       `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Number    int64     `json:"number"`
-	Balance   int64     `json:"balance"`
-	CreatedAt time.Time `json:"createdAt"`
+	ID                int       `json:"id"`
+	FirstName         string    `json:"firstName"`
+	LastName          string    `json:"lastName"`
+	Number            int64     `json:"number"`
+	EncryptedPassword string    `json:"-"`
+	Balance           int64     `json:"balance"`
+	CreatedAt         time.Time `json:"createdAt"`
 }
 
 // Criando uma nova instância de Account
