@@ -65,6 +65,38 @@ func (s *APIServer) handleAccount(w http.ResponseWriter, r *http.Request) error 
 	// return fmt.Errorf("Method not allowed %s", r.Method)
 }
 
+func (s *APIServer) handleLogin(w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodPost {
+		return fmt.Errorf("Method not allowed %s", r.Method)
+	}
+
+	var loginRequest LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&loginRequest); err != nil {
+		return err
+	}
+
+	acc, err := s.store.GetAccountByNumber(loginRequest.Number)
+	if err != nil {
+		return err
+	}
+
+	if err := acc.ValidatePassword(loginRequest.Password); err != nil {
+		return fmt.Errorf("Invalid credentials")
+	}
+
+	token, err := generateJWT(acc)
+	if err != nil {
+		return err
+	}
+
+	resp := LoginResponse{
+		Number: acc.Number,
+		Token:  token,
+	}
+
+	return WriteJSON(w, http.StatusOK, resp)
+}
+
 func (s *APIServer) handleGetAccount(w http.ResponseWriter, r *http.Request) error {
 	accounts, err := s.store.GetAccounts()
 	if err != nil {
@@ -115,13 +147,6 @@ func (s *APIServer) handleCreateAccount(w http.ResponseWriter, r *http.Request) 
 	if err := s.store.CreateAccount(account); err != nil {
 		return err
 	}
-
-	tokenString, err := generateJWT(account)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("JWT Token:", tokenString)
 
 	return WriteJSON(w, http.StatusCreated, account)
 }
