@@ -81,7 +81,18 @@ func (s *PostgresStore) DeleteAccount(id int) error {
 	return nil
 }
 
-func (s *PostgresStore) UpdateAccount(a *Account) error {
+func (s *PostgresStore) UpdateAccount(request *TransferRequest) error {
+	statement, err := s.db.Prepare(`update accounts set balance = $1 where id = $2`)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(request.Amount, request.ToAccount)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
