@@ -14,6 +14,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if *seed {
+		fmt.Println("seeding the db")
+		seedAccounts(store)
+	}
+
 	server := NewAPIServer(":3000", store)
 	server.Run()
 }
