@@ -152,6 +152,42 @@ func WriteJSON(w http.ResponseWriter, status int, value any) error {
 	return json.NewEncoder(w).Encode(value)
 }
 
+const jwtSecret = "hunter999"
+
+func generateJWT(account *Account) (string, error) {
+	claims := &jwt.MapClaims{
+		"expiresAt":     15000,
+		"accountNumber": account.Number,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	return token.SignedString([]byte(jwtSecret))
+}
+
+func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.Header.Get("x-jwt-token")
+
+		_, err := validateJWT(tokenString)
+		if err != nil {
+			WriteJSON(w, http.StatusForbidden, APIError{Error: "Invalid token"})
+			return
+		}
+
+		handlerFunc(w, r)
+	}
+}
+
+func validateJWT(tokenString string) (*jwt.Token, error) {
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(jwtSecret), nil
+	})
+}
+
 // Tipo das nossas handle functions
 type apiFunc func(http.ResponseWriter, *http.Request) error
 
