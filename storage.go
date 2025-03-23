@@ -8,7 +8,7 @@ import (
 type Storage interface {
 	CreateAccount(*Account) error
 	DeleteAccount(int) error
-	UpdateAccount(*Account) error
+	UpdateAccount(*TransferRequest) error
 	GetAccounts() ([]*Account, error)
 	GetAccountByID(int) (*Account, error)
 }
