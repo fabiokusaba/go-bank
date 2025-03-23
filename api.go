@@ -171,7 +171,7 @@ func withJWTAuth(handlerFunc http.HandlerFunc, s Storage) http.HandlerFunc {
 
 		token, err := validateJWT(tokenString)
 		if err != nil {
-			WriteJSON(w, http.StatusForbidden, APIError{Error: "Invalid token"})
+			WriteJSON(w, http.StatusForbidden, APIError{Error: "Permission denied"})
 			return
 		}
 
