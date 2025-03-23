@@ -165,7 +165,7 @@ func generateJWT(account *Account) (string, error) {
 	return token.SignedString([]byte(jwtSecret))
 }
 
-func withJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
+func withJWTAuth(handlerFunc http.HandlerFunc, s Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("x-jwt-token")
 
