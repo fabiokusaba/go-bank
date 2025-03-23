@@ -1,10 +1,16 @@
 package main
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
+
+type LoginResponse struct {
+	Number int64  `json:"number"`
+	Token  string `json:"token"`
+}
 
 type LoginRequest struct {
 	Number   int64  `json:"number"`
