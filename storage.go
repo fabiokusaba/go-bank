@@ -123,6 +123,30 @@ func (s *PostgresStore) GetAccounts() ([]*Account, error) {
 	return accounts, nil
 }
 
+func (s *PostgresStore) GetAccountByNumber(number int) (*Account, error) {
+	rows, err := s.db.Query("select * from accounts where number = $1", number)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var account Account
+
+	for rows.Next() {
+		if err = rows.Scan(
+			&account.ID,
+			&account.FirstName,
+			&account.LastName,
+			&account.Number,
+			&account.Balance,
+			&account.CreatedAt); err != nil {
+			return nil, err
+		}
+	}
+
+	return &account, nil
+}
+
 func (s *PostgresStore) GetAccountByID(id int) (*Account, error) {
 	rows, err := s.db.Query("select * from accounts where id = $1", id)
 	if err != nil {
