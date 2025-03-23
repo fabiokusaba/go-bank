@@ -123,7 +123,7 @@ func (s *PostgresStore) GetAccounts() ([]*Account, error) {
 	return accounts, nil
 }
 
-func (s *PostgresStore) GetAccountByNumber(number int) (*Account, error) {
+func (s *PostgresStore) GetAccountByNumber(number int64) (*Account, error) {
 	rows, err := s.db.Query("select * from accounts where number = $1", number)
 	if err != nil {
 		return nil, err
