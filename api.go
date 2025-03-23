@@ -174,6 +174,30 @@ func withJWTAuth(handlerFunc http.HandlerFunc, s Storage) http.HandlerFunc {
 			WriteJSON(w, http.StatusForbidden, APIError{Error: "Permission denied"})
 			return
 		}
+		if !token.Valid {
+			WriteJSON(w, http.StatusForbidden, APIError{Error: "Permission denied"})
+			return
+		}
+
+		params := mux.Vars(r)
+		accountID, err := strconv.Atoi(params["id"])
+		if err != nil {
+			WriteJSON(w, http.StatusNotFound, APIError{Error: "Account not found"})
+			return
+		}
+
+		account, err := s.GetAccountByID(accountID)
+		if err != nil {
+			WriteJSON(w, http.StatusForbidden, APIError{Error: "Permission denied"})
+			return
+		}
+
+		claims := token.Claims.(jwt.MapClaims)
+
+		if account.Number != int64(claims["accountNumber"].(float64)) {
+			WriteJSON(w, http.StatusForbidden, APIError{Error: "Permission denied"})
+			return
+		}
 
 		handlerFunc(w, r)
 	}
